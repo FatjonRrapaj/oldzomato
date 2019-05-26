@@ -47,6 +47,8 @@ public class NavigationActivity extends BaseActivity implements FirstTimeLanding
             switch (item.getItemId()) {
                 case R.id.home:
                     Bundle bundle = new Bundle();
+                    //first check if there is a user in the db.
+                    //to reopen firsttimelanding go to profile and delete selected city.
                     if (selectedCityId == 0) {
                         toolbar.setTitle("Welcome");
                         bundle.putString("userName",userName);
