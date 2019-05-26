@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "1036789484312",
+    "firebase_url": "https://zomato-a281a.firebaseio.com",
+    "project_id": "zomato-a281a",
+    "storage_bucket": "zomato-a281a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1036789484312:android:65afb0da55737825",
+        "android_client_info": {
+          "package_name": "com.example.zomato"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1036789484312-eeomni07q27qohs5vq2gu031o1gsfgu8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBfLOdECLdEZCxVqhNkSvHUNHLMzWINDHE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1036789484312-eeomni07q27qohs5vq2gu031o1gsfgu8.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
