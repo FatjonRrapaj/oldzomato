@@ -1,4 +1,4 @@
-package com.example.zomato.data.states;
+package com.example.zomato.staticData.states;
 
 public class State {
 
@@ -7,6 +7,17 @@ public class State {
     private String cities;
     private int resource;
     private String capitalCity;
+
+    public State() {
+    }
+
+    public State(String name, String id, String cities, int resource, String capitalCity) {
+        this.name = name;
+        this.id = id;
+        this.cities = cities;
+        this.resource = resource;
+        this.capitalCity = capitalCity;
+    }
 
     public String getName() {
         return name;

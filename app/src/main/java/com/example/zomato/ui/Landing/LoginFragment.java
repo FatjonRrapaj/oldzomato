@@ -15,6 +15,8 @@ import androidx.fragment.app.Fragment;
 import com.example.zomato.R;
 import com.example.zomato.R2;
 
+import org.greenrobot.eventbus.EventBus;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -31,12 +33,12 @@ public class LoginFragment extends Fragment {
     void login() {
         String emailText = email.getText().toString();
         String passwordText = password.getText().toString();
-        if(emailText.length() == 0) {
-            Toast.makeText(LoginFragment.this.getContext(),"Please enter your email",Toast.LENGTH_SHORT).show();
+        if (emailText.length() == 0) {
+            Toast.makeText(LoginFragment.this.getContext(), "Please enter your email", Toast.LENGTH_SHORT).show();
             return;
         }
-        if(passwordText.length() == 0) {
-            Toast.makeText(LoginFragment.this.getContext(),"Please enter your password",Toast.LENGTH_SHORT).show();
+        if (passwordText.length() == 0) {
+            Toast.makeText(LoginFragment.this.getContext(), "Please enter your password", Toast.LENGTH_SHORT).show();
             return;
         }
         listener.loginClicked(emailText, passwordText);
@@ -44,14 +46,15 @@ public class LoginFragment extends Fragment {
     }
 
     @OnClick(R.id.register)
-    void register(){
+    void register() {
         listener.onRegisterClicked();
     }
 
     private Unbinder unbinder;
 
-    public  interface OnItemSelectedListener {
-        public  void loginClicked(String email, String password);
+    public interface OnItemSelectedListener {
+        public void loginClicked(String email, String password);
+
         public void onRegisterClicked();
     }
 
@@ -71,9 +74,9 @@ public class LoginFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.login_fragment,container,false);
-        unbinder = ButterKnife.bind(this,view);
-        return  view;
+        View view = inflater.inflate(R.layout.login_fragment, container, false);
+        unbinder = ButterKnife.bind(this, view);
+        return view;
     }
 
     @Override

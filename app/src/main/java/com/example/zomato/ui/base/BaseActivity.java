@@ -1,6 +1,7 @@
 package com.example.zomato.ui.base;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -11,6 +12,8 @@ import java.util.Iterator;
 import java.util.Map;
 
 public class BaseActivity extends AppCompatActivity {
+
+    protected ProgressDialog progressDialog;
 
     protected void presentFragment(int path, Fragment fragment) {
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
@@ -37,5 +40,26 @@ public class BaseActivity extends AppCompatActivity {
         Intent intent = new Intent(getBaseContext(),activity.getClass());
         intent.putExtra(argumentKey,argumentValue);
         startActivity(intent);
+    }
+
+    protected void showProgressBar(String message) {
+        if (progressDialog == null) {
+            progressDialog = new ProgressDialog(this);
+            progressDialog.setTitle("Loading");
+        }
+        progressDialog.setMessage(message);
+        progressDialog.show();
+    }
+
+    protected void dismissProgressDialog(){
+        if (progressDialog != null && progressDialog.isShowing()) {
+            progressDialog.dismiss();
+        }
+    }
+
+    @Override
+    public void onResume() {
+        dismissProgressDialog();
+        super.onResume();
     }
 }

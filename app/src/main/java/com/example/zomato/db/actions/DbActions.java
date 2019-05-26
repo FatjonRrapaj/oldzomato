@@ -13,8 +13,8 @@ public class DbActions {
     }
 
 
-    private void writeNewUser(String userId, String firstName, String lastName, String email, int[] favRestaurants) {
-        User user = new User(firstName,lastName,email,favRestaurants);
+    private void writeNewUser(String userId, String firstName, String lastName, String email) {
+        User user = new User(firstName,lastName,email);
         databaseReference.child("users").child(userId).setValue(user);
 }
 

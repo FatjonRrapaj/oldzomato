@@ -1,4 +1,4 @@
-package com.example.zomato.data.states;
+package com.example.zomato.staticData.states;
 
 public class Constants {
     //default city and establishment id:

@@ -1,4 +1,4 @@
-package com.example.zomato.ui.restaurants.Fragments;
+package com.example.zomato.ui.restaurants.fragments;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -14,13 +14,14 @@ import com.example.zomato.R;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
-public class FirstTimeLandingFragment extends Fragment {
+public class CollectionsFragment extends Fragment {
+
     private Unbinder unbinder;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.first_time_landing_fragment,container);
+        View view = inflater.inflate(R.layout.collections_fragment,container,false);
         unbinder = ButterKnife.bind(this,view);
         return view;
     }

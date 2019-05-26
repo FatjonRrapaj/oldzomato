@@ -1,19 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/navigation_shop"
+        android:id="@+id/home"
         android:icon="@drawable/italy"
-        android:title="Home" />
+        android:title="Home"
+        app:showAsAction="ifRoom"/>
 
     <item
-        android:id="@+id/navigation_gifts"
+        android:id="@+id/collections"
         android:icon="@drawable/portugal"
-        android:title="Collections" />
+        android:title="Collections"
+        app:showAsAction="ifRoom"/>
 
     <item
-        android:id="@+id/navigation_cart"
+        android:id="@+id/profile"
         android:icon="@drawable/turkey"
-        android:title="Profile" />
+        android:title="Profile"
+        app:showAsAction="ifRoom"/>
 
 </menu>

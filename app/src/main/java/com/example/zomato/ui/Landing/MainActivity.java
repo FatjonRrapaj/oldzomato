@@ -33,8 +33,8 @@ public class MainActivity extends BaseActivity implements LoginFragment.OnItemSe
         // Check if user is signed in (non-null) and update UI accordingly.
         FirebaseUser currentUser = mAuth.getCurrentUser();
         if (currentUser != null) {
-            FirebaseAuth.getInstance().signOut();
-            Toast.makeText(this,"User Logged in",Toast.LENGTH_SHORT).show();
+//            FirebaseAuth.getInstance().signOut();
+            presentActivity(new NavigationActivity(),"username", currentUser.getDisplayName());
         } else {
             presentFragment(R.id.fragment_holder_main, new LoginFragment());
         }
