@@ -1,5 +1,7 @@
 package com.example.zomato.utils;
 
+//from : https://stackoverflow.com/questions/33575731/gridlayoutmanager-how-to-auto-fit-columns
+
 import android.content.Context;
 import android.util.DisplayMetrics;
 

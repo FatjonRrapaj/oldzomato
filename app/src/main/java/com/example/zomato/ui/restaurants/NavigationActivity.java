@@ -8,7 +8,7 @@ import androidx.appcompat.app.ActionBar;
 
 import com.example.zomato.R;
 import com.example.zomato.ui.base.BaseActivity;
-import com.example.zomato.ui.restaurants.fragments.CollectionsFragment;
+import com.example.zomato.ui.restaurants.fragments.collectionsFragment.CollectionsFragment;
 import com.example.zomato.ui.restaurants.fragments.homeFragment.HomeFragment;
 import com.example.zomato.ui.restaurants.fragments.firstTimeLanding.FirstTimeLandingFragment;
 import com.example.zomato.ui.restaurants.fragments.ProfileFragment;
