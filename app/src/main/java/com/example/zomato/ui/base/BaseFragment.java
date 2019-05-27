@@ -16,6 +16,10 @@ public class BaseFragment extends Fragment {
         super.onCreate(savedInstanceState);
     }
 
+    protected boolean isSafe() {
+        return !(this.isRemoving() || this.getActivity() == null || this.isDetached() || !this.isAdded() || this.getView() == null);
+    }
+
     protected void showProgressBar(String message) {
         if (progressDialog == null) {
             progressDialog = new ProgressDialog(BaseFragment.this.getContext());

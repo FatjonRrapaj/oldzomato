@@ -134,14 +134,18 @@ public class FirstTimeLandingFragment extends BaseFragment {
         api.getCitiesPerState(cities).enqueue(new Callback<CitiesResponse>() {
             @Override
             public void onResponse(Call<CitiesResponse> call, Response<CitiesResponse> response) {
-                dismissProgressDialog();
-                ((CitiesAdapter) citiesAdapter).setList(response.body().getLocationSuggestions());
+                if (isSafe()) {
+                    dismissProgressDialog();
+                    ((CitiesAdapter) citiesAdapter).setList(response.body().getLocationSuggestions());
+                }
             }
 
             @Override
             public void onFailure(Call<CitiesResponse> call, Throwable t) {
-                dismissProgressDialog();
-                Toast.makeText(FirstTimeLandingFragment.this.getContext(), "Something went wrong", Toast.LENGTH_SHORT).show();
+                if (isSafe()) {
+                    dismissProgressDialog();
+                    Toast.makeText(FirstTimeLandingFragment.this.getContext(), "Something went wrong", Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }

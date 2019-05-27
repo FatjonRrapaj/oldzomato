@@ -142,18 +142,22 @@ public class HomeFragment extends BaseFragment implements CustomScrollListener.O
         api.getRestaurantsPerEntity(cityId, "city", count).enqueue(new Callback<RestaurantsResponse>() {
             @Override
             public void onResponse(Call<RestaurantsResponse> call, Response<RestaurantsResponse> response) {
-                dismissProgressDialog();
-                if (response.body().getRestaurants() != null || !response.body().getRestaurants().isEmpty()) {
-                    ((RestaurantsAdapter) adapter).setData(response.body().getRestaurants());
-                } else {
-                    Toast.makeText(HomeFragment.this.getContext(), "Something went wrong please try again later", Toast.LENGTH_SHORT).show();
+                if (isSafe()) {
+                    dismissProgressDialog();
+                    if (response.body().getRestaurants() != null || !response.body().getRestaurants().isEmpty()) {
+                        ((RestaurantsAdapter) adapter).setData(response.body().getRestaurants());
+                    } else {
+                        Toast.makeText(HomeFragment.this.getContext(), "Something went wrong please try again later", Toast.LENGTH_SHORT).show();
+                    }
                 }
             }
 
             @Override
             public void onFailure(Call<RestaurantsResponse> call, Throwable t) {
-                dismissProgressDialog();
-                Toast.makeText(HomeFragment.this.getContext(), "Something went wrong please check your connection", Toast.LENGTH_SHORT).show();
+                if (isSafe()) {
+                    dismissProgressDialog();
+                    Toast.makeText(HomeFragment.this.getContext(), "Something went wrong please check your connection", Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }

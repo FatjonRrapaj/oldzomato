@@ -8,10 +8,11 @@ import androidx.appcompat.app.ActionBar;
 
 import com.example.zomato.R;
 import com.example.zomato.ui.base.BaseActivity;
+import com.example.zomato.ui.restaurants.fragments.categoriesFragment.CategoriesFragment;
 import com.example.zomato.ui.restaurants.fragments.collectionsFragment.CollectionsFragment;
 import com.example.zomato.ui.restaurants.fragments.homeFragment.HomeFragment;
 import com.example.zomato.ui.restaurants.fragments.firstTimeLanding.FirstTimeLandingFragment;
-import com.example.zomato.ui.restaurants.fragments.ProfileFragment;
+import com.example.zomato.ui.restaurants.fragments.profileFragment.ProfileFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class NavigationActivity extends BaseActivity implements FirstTimeLandingFragment.OnCitySelectedListener {
@@ -56,6 +57,7 @@ public class NavigationActivity extends BaseActivity implements FirstTimeLanding
                         firstTimeLandingFragment.setArguments(bundle);
                         presentFragment(R.id.fragment_holder_nav, firstTimeLandingFragment);
                     } else {
+                        toolbar.setTitle("Home");
                         bundle.putInt("cityId",selectedCityId);
                         HomeFragment homeFragment = new HomeFragment();
                         homeFragment.setArguments(bundle);
@@ -64,7 +66,15 @@ public class NavigationActivity extends BaseActivity implements FirstTimeLanding
                     return true;
                 case R.id.collections:
                     toolbar.setTitle("Collections");
-                    presentFragment(R.id.fragment_holder_nav, new CollectionsFragment());
+                    bundle = new Bundle();
+                    bundle.putInt("cityId",selectedCityId);
+                    CollectionsFragment collectionsFragment = new CollectionsFragment();
+                    collectionsFragment.setArguments(bundle);
+                    presentFragment(R.id.fragment_holder_nav,collectionsFragment);
+                    return true;
+                case R.id.categories:
+                    toolbar.setTitle("Collections");
+                    presentFragment(R.id.fragment_holder_nav, new CategoriesFragment());
                     return true;
                 case R.id.profile:
                     toolbar.setTitle("Profile");

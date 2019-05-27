@@ -1,4 +1,4 @@
-package com.example.zomato.ui.restaurants.fragments;
+package com.example.zomato.ui.restaurants.fragments.profileFragment;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
