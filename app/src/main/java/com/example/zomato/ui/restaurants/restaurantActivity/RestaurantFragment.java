@@ -76,6 +76,8 @@ public class RestaurantFragment extends BaseFragment implements OnMapReadyCallba
     private SingleRestaurantResponse restaurantObj;
     private String restaurantId = "";
 
+
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -114,7 +116,12 @@ public class RestaurantFragment extends BaseFragment implements OnMapReadyCallba
 
     private void updateRestaurantProfile(SingleRestaurantResponse restaurant) {
         updateMap(restaurant.getLocation());
-        Picasso.get().load(restaurant.getThumb()).into(restaurantImage);
+        if (restaurant.getThumb().isEmpty()) {
+            restaurantImage.setImageDrawable(getResources().getDrawable(R.drawable.ic_landscape));
+        } else {
+            Picasso.get().load(restaurant.getThumb()).into(restaurantImage);
+
+        }
         restaurantName.setText(restaurant.getName());
         restaurantAddress.setText(restaurant.getLocation().getAddress());
         currency.setText(restaurant.getCurrency());

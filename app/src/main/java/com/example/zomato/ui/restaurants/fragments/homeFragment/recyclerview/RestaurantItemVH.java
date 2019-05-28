@@ -55,9 +55,11 @@ public class RestaurantItemVH extends RecyclerView.ViewHolder {
 
         this.restaurantsItem = restaurantsItem;
 
-        String restaurantImageUrl = restaurantsItem.getRestaurant().getFeaturedImage();
-        String url = restaurantImageUrl.isEmpty() ? defaultRestaurantImage : restaurantImageUrl;
-        Picasso.get().load(url).into(restaurantImage);
+        if (restaurantsItem.getRestaurant().getThumb().isEmpty()) {
+            restaurantImage.setImageResource(R.drawable.ic_landscape);
+        } else {
+            Picasso.get().load(restaurantsItem.getRestaurant().getThumb()).into(restaurantImage);
+        }
 
         restaurantName.setText(restaurantsItem.getRestaurant().getName());
 

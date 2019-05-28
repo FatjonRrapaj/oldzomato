@@ -29,6 +29,8 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.util.Map;
+
 public class NavigationActivity extends BaseActivity implements FirstTimeLandingFragment.OnCitySelectedListener {
 
     private ActionBar toolbar;
@@ -52,14 +54,7 @@ public class NavigationActivity extends BaseActivity implements FirstTimeLanding
         database = FirebaseDatabase.getInstance();
         Gson gson = new Gson();
         firebaseUser = getFirebaseUser();
-
-        if (getIntent().getStringExtra("newUser") != null) {
-            databaseReference = database.getReference();
-            user = gson.fromJson(getIntent().getStringExtra("newUser"), User.class);
-            databaseReference.child("users").child(firebaseUser.getUid()).setValue(user);
-        } else {
-            getCurrentUser();
-        }
+        getCurrentUser();
     }
 
     private void getCurrentUser() {
@@ -68,7 +63,9 @@ public class NavigationActivity extends BaseActivity implements FirstTimeLanding
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 user = dataSnapshot.getValue(User.class);
-                showHomeFragment();
+                if (user != null) {
+                    showHomeFragment();
+                }
             }
 
             @Override
@@ -78,15 +75,24 @@ public class NavigationActivity extends BaseActivity implements FirstTimeLanding
         });
     }
 
-    private void showHomeFragment() {
+    private void showWelcomeFragment(){
         Bundle bundle = new Bundle();
-        if (user.getSelectedCityId() == 0) {
-            toolbar.setTitle("Welcome");
-            bundle.putString("userName", user.getFirstName());
-            FirstTimeLandingFragment firstTimeLandingFragment = new FirstTimeLandingFragment();
-            firstTimeLandingFragment.setArguments(bundle);
-            presentFragment(R.id.fragment_holder_nav, firstTimeLandingFragment);
+        toolbar.setTitle("Welcome");
+        bundle.putString("userName", user.getFirstName());
+        FirstTimeLandingFragment firstTimeLandingFragment = new FirstTimeLandingFragment();
+        firstTimeLandingFragment.setArguments(bundle);
+        presentFragment(R.id.fragment_holder_nav, firstTimeLandingFragment);
+    }
+
+    private void showHomeFragment() {
+        if (user==null){
+            System.out.println("USER IS NULL");
+            return;
+        }
+        if (user.getSelectedCityId() == null || user.getSelectedCityId() == 0) {
+            showWelcomeFragment();
         } else {
+            Bundle bundle = new Bundle();
             toolbar.setTitle("Home");
             bundle.putString("cityId", String.valueOf(user.getSelectedCityId()));
             HomeFragment homeFragment = new HomeFragment();
@@ -100,17 +106,26 @@ public class NavigationActivity extends BaseActivity implements FirstTimeLanding
 
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+            Bundle bundle = new Bundle();
             switch (item.getItemId()) {
                 case R.id.home:
                     showHomeFragment();
                     return true;
                 case R.id.categories:
                     toolbar.setTitle("Categories");
-                    presentFragment(R.id.fragment_holder_nav, new CategoriesFragment());
+//                    String[] favRestaurants = new String[user.getFavouriteRestaurants().size()];
+//                    int i = 0;
+//                    for (Map.Entry k: user.getFavouriteRestaurants().entrySet()) {
+//                        favRestaurants[i] = (String) k.getValue();
+//                        i++;
+//                    }
+//                    bundle.putStringArray("favRestaurants",favRestaurants);
+                    CategoriesFragment categoriesFragment = new CategoriesFragment();
+//                    categoriesFragment.setArguments(bundle);
+                    presentFragment(R.id.fragment_holder_nav, categoriesFragment);
                     return true;
                 case R.id.profile:
                     toolbar.setTitle("Profile");
-                    Bundle bundle = new Bundle();
                     Gson gson = new Gson();
                     String serializedUser = gson.toJson(user);
                     bundle.putString("user",serializedUser);
@@ -147,16 +162,13 @@ public class NavigationActivity extends BaseActivity implements FirstTimeLanding
     void selectedFavouriteRestaurant(FavouriteRestaurant favouriteRestaurant) {
         if (favouriteRestaurant != null) {
             if (favouriteRestaurant.isChecked()) {
-                databaseReference.child("users")
-                        .child(firebaseUser.getUid())
-                        .child("favouriteRestaurants")
+                databaseReference = database.getReference("users").child(firebaseUser.getUid());
+                databaseReference.child("favouriteRestaurants")
                         .child(favouriteRestaurant.getId())
                         .setValue(favouriteRestaurant.getId());
 
             } else {
-                databaseReference.child("users")
-                        .child(firebaseUser.getUid())
-                        .child("favouriteRestaurants")
+                databaseReference.child("favouriteRestaurants")
                         .child(favouriteRestaurant.getId())
                         .removeValue();
             }
@@ -165,10 +177,22 @@ public class NavigationActivity extends BaseActivity implements FirstTimeLanding
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     void signedOut(String signoutMessage) {
-        if (signoutMessage != null && signoutMessage == "Signed Out") {
+        if (signoutMessage != null && signoutMessage.equals( "Signed Out")) {
             finish();
         }
     }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    void deletedCity(String deletedCity) {
+        if(deletedCity != null && deletedCity.equals("Deleted city")){
+            databaseReference = database.getReference("users").child(firebaseUser.getUid());
+            databaseReference.child("selectedCityId").removeValue();
+            databaseReference.child("selectedCityName").removeValue();
+            showWelcomeFragment();
+        }
+    }
+
+
 
     @Override
     protected void onDestroy() {

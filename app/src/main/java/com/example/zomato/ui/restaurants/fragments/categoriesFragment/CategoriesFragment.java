@@ -16,6 +16,8 @@ import com.example.zomato.ui.restaurants.fragments.categoriesFragment.tabs.favou
 import com.example.zomato.utils.TabAdapter;
 import com.google.android.material.tabs.TabLayout;
 
+import java.util.Observable;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
@@ -31,6 +33,15 @@ public class CategoriesFragment extends Fragment {
     private Unbinder unbinder;
 
     private TabAdapter adapter;
+
+//    private String[] favRestaurantsArray; 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (getArguments() != null) {
+//            favRestaurantsArray = getArguments().getStringArray("favRestaurants");
+        }
+    }
 
     @Nullable
     @Override
@@ -55,11 +66,10 @@ public class CategoriesFragment extends Fragment {
         collectionsFragment.setArguments(bundle);
 
         FavouritesFragment favouritesFragment = new FavouritesFragment();
-        favouritesFragment.setArguments(bundle);
 
         adapter = new TabAdapter(getFragmentManager());
         adapter.addFragment(collectionsFragment,"Collections");
-        adapter.addFragment(favouritesFragment,"Favourites");
+//        adapter.addFragment(favouritesFragment,"Favourites");
 
         viewPager.setAdapter(adapter);
         tabLayout.setupWithViewPager(viewPager);

@@ -16,6 +16,7 @@ import com.example.zomato.R;
 import com.example.zomato.db.objects.User;
 import com.example.zomato.ui.base.BaseFragment;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -70,6 +71,11 @@ public class ProfileFragment extends BaseFragment {
                         Toast.makeText(ProfileFragment.this.getContext(), "Failed to update the email", Toast.LENGTH_SHORT).show();
                     }
                 }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    System.out.println(e.getMessage());
+                }
             });
         }
     }
@@ -78,17 +84,30 @@ public class ProfileFragment extends BaseFragment {
     void updatePasswordClicked() {
         if (passwordEditText.getText().toString().length() >= 6) {
             showProgressBar("Updating password...");
-            firebaseUser.updateEmail(passwordEditText.getText().toString()).addOnCompleteListener(new OnCompleteListener<Void>() {
-                @Override
-                public void onComplete(@NonNull Task<Void> task) {
-                    if (task.isSuccessful()) {
-                        Toast.makeText(ProfileFragment.this.getContext(), "Password updated", Toast.LENGTH_SHORT).show();
-                    } else {
-                        Toast.makeText(ProfileFragment.this.getContext(), "Failed to update the password", Toast.LENGTH_SHORT).show();
-                    }
-                }
-            });
+            firebaseUser.updateEmail(passwordEditText.getText().toString())
+                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if (task.isSuccessful()) {
+                                Toast.makeText(ProfileFragment.this.getContext(), "Password updated", Toast.LENGTH_SHORT).show();
+                            } else {
+                                Toast.makeText(ProfileFragment.this.getContext(), "Failed to update the password", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            System.out.println(e.getMessage());
+                        }
+                    });
         }
+    }
+
+
+    @OnClick(R.id.delete_city)
+    void cityDeleted() {
+        EventBus.getDefault().post("Deleted city");
     }
 
     @OnClick(R.id.sign_out_btn)
@@ -121,12 +140,16 @@ public class ProfileFragment extends BaseFragment {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 user = dataSnapshot.getValue(User.class);
-                nameTextView.setText(user.getFirstName() + " " + user.getLastName());
-                emailEditText.setText(user.getEmail());
-                passwordEditText.setHint("Change password...");
-                selectedCityTextView.setText(user.getSelectedCityName());
+                if(isSafe()){
+                    nameTextView.setText(user.getFirstName() + " " + user.getLastName());
+                    emailEditText.setText(user.getEmail());
+                    passwordEditText.setHint("Change password...");
+                    selectedCityTextView.setText(user.getSelectedCityName());
+                }
+
                 System.out.println(user);
             }
+
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
             }

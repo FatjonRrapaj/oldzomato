@@ -12,6 +12,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.zomato.R;
+import com.example.zomato.client.api.Api;
+import com.example.zomato.client.api.ApiUtils;
+import com.example.zomato.client.responses.singleRestaurant.SingleRestaurantResponse;
 import com.example.zomato.db.objects.User;
 import com.example.zomato.ui.base.BaseFragment;
 import com.example.zomato.ui.restaurants.fragments.homeFragment.HomeFragment;
@@ -26,9 +29,15 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class FavouritesFragment extends BaseFragment {
 
@@ -39,27 +48,36 @@ public class FavouritesFragment extends BaseFragment {
 
     private RecyclerView.Adapter adapter;
 
+    private Api api;
+
     private FirebaseUser firebaseUser;
     private FirebaseDatabase database;
     private DatabaseReference databaseReference;
 
+
     private User user;
+    private List<String> restaurantsArray = new ArrayList<>();
+    private List<SingleRestaurantResponse> restaurantResponseList;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        firebaseUser = getFirebaseUser();
-        database = FirebaseDatabase.getInstance();
-        databaseReference = database.getReference("users").child(firebaseUser.getUid());
-        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+        api = ApiUtils.getApiService();
+        restaurantResponseList = new ArrayList<>();
+    }
+
+    private void getRestaurant(int restId){
+        api.getRestaurant(String.valueOf(restId)).enqueue(new Callback<SingleRestaurantResponse>() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                user = dataSnapshot.getValue(User.class);
-                System.out.println(user);
+            public void onResponse(Call<SingleRestaurantResponse> call, Response<SingleRestaurantResponse> response) {
+                if(response.body() != null){
+                    restaurantResponseList.add(response.body());
+                }
             }
 
             @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
+            public void onFailure(Call<SingleRestaurantResponse> call, Throwable t) {
+
             }
         });
     }
@@ -83,6 +101,7 @@ public class FavouritesFragment extends BaseFragment {
         recyclerView.setHasFixedSize(true);
         RecyclerViewMargin decoration = new RecyclerViewMargin(4, numberOfColumns);
         recyclerView.addItemDecoration(decoration);
+
     }
 
     @Override

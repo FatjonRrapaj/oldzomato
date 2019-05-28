@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Window;
 import android.widget.Toast;
 
 import com.example.zomato.R;
@@ -16,18 +17,26 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.gson.Gson;
 
 
 public class MainActivity extends BaseActivity implements LoginFragment.OnItemSelectedListener, SignUpFragment.OnItemSelectedListener {
+
+    private FirebaseDatabase database;
+    private DatabaseReference databaseReference;
 
     private FirebaseAuth firebaseAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_main);
         firebaseAuth = FirebaseAuth.getInstance();
+        database = FirebaseDatabase.getInstance();
+        databaseReference = database.getReference();
     }
 
     @Override
@@ -76,6 +85,7 @@ public class MainActivity extends BaseActivity implements LoginFragment.OnItemSe
                             Gson gson = new Gson();
                             User newUser = new User(firstName,lastName,email);
                             String serializedNewUser = gson.toJson(newUser);
+                            databaseReference.child("users").child(firebaseAuth.getCurrentUser().getUid()).setValue(newUser);
                             presentActivity(new NavigationActivity(), "newUser",serializedNewUser);
                         } else {
                             Toast.makeText(getApplication(), "Failed to create user", Toast.LENGTH_SHORT).show();

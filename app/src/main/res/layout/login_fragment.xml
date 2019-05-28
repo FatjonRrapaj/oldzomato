@@ -10,7 +10,7 @@
         android:id="@+id/appName"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
-        android:layout_marginTop="120dp"
+        android:layout_marginTop="80dp"
         android:lineSpacingExtra="8sp"
         android:text=" Zomato Demo App"
         android:textColor="@color/red"
@@ -109,5 +109,5 @@
         app:layout_constraintEnd_toStartOf="@+id/password"
         app:layout_constraintStart_toStartOf="@+id/imageView"
         app:layout_constraintTop_toTopOf="@+id/password"
-        tools:srcCompat="@drawable/key_icon" />
+        app:srcCompat="@drawable/key_icon" />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,5 +1,7 @@
 package com.example.zomato.db.objects;
 
+import java.util.HashMap;
+
 public class User {
 
     private String firstName;
@@ -7,7 +9,7 @@ public class User {
     private String email;
     private Long selectedCityId;
     private String selectedCityName;
-    private String favouriteRestaurants;
+    private HashMap<String ,String> favouriteRestaurants;
 
 
     public User() {
@@ -51,11 +53,11 @@ public class User {
         this.selectedCityId = selectedCityId;
     }
 
-    public String getFavouriteRestaurants() {
+    public HashMap<String ,String> getFavouriteRestaurants() {
         return favouriteRestaurants;
     }
 
-    public void setFavouriteRestaurants(String favouriteRestaurants) {
+    public void setFavouriteRestaurants(HashMap<String ,String> favouriteRestaurants) {
         this.favouriteRestaurants = favouriteRestaurants;
     }
 
