@@ -18,8 +18,6 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.gson.Gson;
 
-import java.util.HashMap;
-import java.util.Map;
 
 public class MainActivity extends BaseActivity implements LoginFragment.OnItemSelectedListener, SignUpFragment.OnItemSelectedListener {
 
@@ -35,12 +33,9 @@ public class MainActivity extends BaseActivity implements LoginFragment.OnItemSe
     @Override
     public void onStart() {
         super.onStart();
-        // Check if user is signed in (non-null) and update UI accordingly.
         FirebaseUser currentUser = firebaseAuth.getCurrentUser();
         if (currentUser != null) {
-            Gson gson = new Gson();
-            String serializedUser = gson.toJson(currentUser);
-            presentActivity(new NavigationActivity(), "firebaseUser", serializedUser);
+            presentActivity(new NavigationActivity());
         } else {
             presentFragment(R.id.fragment_holder_main, new LoginFragment());
         }
@@ -48,15 +43,13 @@ public class MainActivity extends BaseActivity implements LoginFragment.OnItemSe
 
     @Override
     public void loginClicked(String email, String password) {
-        //TODO: show loader here
+        showProgressBar("Logging in...");
         firebaseAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
+                        dismissProgressDialog();
                         if (task.isSuccessful()) {
-//                            FirebaseUser user = firebaseAuth.getCurrentUser();
-//                            Gson gson = new Gson();
-//                            String serializedUser = gson.toJson(user);
                             presentActivity(new NavigationActivity());
                         } else {
                             Toast.makeText(getApplication(), "Failed to log in", Toast.LENGTH_SHORT).show();
@@ -73,13 +66,13 @@ public class MainActivity extends BaseActivity implements LoginFragment.OnItemSe
 
     @Override
     public void signUpClicked(String email, String password, String firstName, String lastName) {
-        //TODO: show loader here.
+        showProgressBar("Please wait...");
         firebaseAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
+                        dismissProgressDialog();
                         if (task.isSuccessful()) {
-
                             Gson gson = new Gson();
                             User newUser = new User(firstName,lastName,email);
                             String serializedNewUser = gson.toJson(newUser);

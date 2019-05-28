@@ -110,7 +110,7 @@
 
     <Button
         android:id="@+id/signup_button"
-        style="@style/Widget.AppCompat.Button.Colored"
+        android:background="@color/red"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -135,8 +135,8 @@
 
     <Button
         android:id="@+id/login_already"
-        style="@android:style/Widget.DeviceDefault.Button.Colored"
         android:layout_width="wrap_content"
+        android:background="@color/red"
         android:layout_height="wrap_content"
         android:text="Sign in "
         android:textSize="14sp"

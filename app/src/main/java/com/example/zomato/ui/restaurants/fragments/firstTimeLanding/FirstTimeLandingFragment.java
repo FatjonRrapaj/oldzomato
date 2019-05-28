@@ -155,11 +155,11 @@ public class FirstTimeLandingFragment extends BaseFragment {
             Toast.makeText(FirstTimeLandingFragment.this.getContext(), "Please select a country and a city", Toast.LENGTH_SHORT).show();
             return;
         }
-        listener.selectedCity(city.getId());
+        listener.selectedCity(city.getId(), city.getName());
     }
 
     public interface OnCitySelectedListener {
-        public void selectedCity(int cityId);
+        public void selectedCity(int cityId, String cityName);
     }
 
 

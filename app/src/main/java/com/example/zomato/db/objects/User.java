@@ -5,7 +5,8 @@ public class User {
     private String firstName;
     private String lastName;
     private String email;
-    private Long selectedCity;
+    private Long selectedCityId;
+    private String selectedCityName;
     private String favouriteRestaurants;
 
 
@@ -42,12 +43,12 @@ public class User {
         this.email = email;
     }
 
-    public Long getSelectedCity() {
-        return selectedCity;
+    public Long getSelectedCityId() {
+        return selectedCityId;
     }
 
-    public void setSelectedCity(Long selectedCity) {
-        this.selectedCity = selectedCity;
+    public void setSelectedCityId(Long selectedCityId) {
+        this.selectedCityId = selectedCityId;
     }
 
     public String getFavouriteRestaurants() {
@@ -56,6 +57,14 @@ public class User {
 
     public void setFavouriteRestaurants(String favouriteRestaurants) {
         this.favouriteRestaurants = favouriteRestaurants;
+    }
+
+    public String getSelectedCityName() {
+        return selectedCityName;
+    }
+
+    public void setSelectedCityName(String selectedCityName) {
+        this.selectedCityName = selectedCityName;
     }
 }
 

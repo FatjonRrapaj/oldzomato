@@ -28,6 +28,7 @@ public interface Api {
     Call<RestaurantsResponse> getRestaurantsPerCollection(@Query(value = "entity_id") String entityId,
                                                           @Query(value = "entity_type") String entityType,
                                                           @Query(value = "collection_id") String collectionId);
+
     @GET("restaurant")
     Call<SingleRestaurantResponse> getRestaurant(@Query(value = "res_id") String resId);
 }

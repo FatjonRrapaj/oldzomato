@@ -7,6 +7,9 @@ import android.widget.ProgressBar;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+
 public class BaseFragment extends Fragment {
 
     private ProgressDialog progressDialog;
@@ -34,6 +37,11 @@ public class BaseFragment extends Fragment {
             progressDialog.dismiss();
         }
     }
+
+    protected FirebaseUser getFirebaseUser() {
+        return FirebaseAuth.getInstance().getCurrentUser();
+    }
+
 
     @Override
     public void onResume() {

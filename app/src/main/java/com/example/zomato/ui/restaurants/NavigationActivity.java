@@ -1,7 +1,6 @@
 package com.example.zomato.ui.restaurants;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
 
 import androidx.annotation.NonNull;
@@ -23,7 +22,6 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.google.gson.Gson;
 
@@ -31,23 +29,15 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.List;
-
 public class NavigationActivity extends BaseActivity implements FirstTimeLandingFragment.OnCitySelectedListener {
 
     private ActionBar toolbar;
     private User user;
+    private User newUser;
 
     private FirebaseUser firebaseUser;
     private FirebaseDatabase database;
     private DatabaseReference databaseReference;
-
-
-    //todo: delete this variable and the logic after storing to the db
-//    private int selectedCityId = 61;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,32 +64,31 @@ public class NavigationActivity extends BaseActivity implements FirstTimeLanding
 
     private void getCurrentUser() {
         databaseReference = database.getReference("users").child(firebaseUser.getUid());
-
         databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 user = dataSnapshot.getValue(User.class);
-                System.out.println(user + "THIS IS THE USERRR");
+                showHomeFragment();
             }
+
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
+                System.out.println(databaseError.getMessage());
             }
         });
     }
 
     private void showHomeFragment() {
         Bundle bundle = new Bundle();
-        //first check if there is a user in the db.
-        //to reopen firsttimelanding go to profile and delete selected city.
-        if (user.getSelectedCity() == 0) {
+        if (user.getSelectedCityId() == 0) {
             toolbar.setTitle("Welcome");
-            bundle.putString("userName", "");
+            bundle.putString("userName", user.getFirstName());
             FirstTimeLandingFragment firstTimeLandingFragment = new FirstTimeLandingFragment();
             firstTimeLandingFragment.setArguments(bundle);
             presentFragment(R.id.fragment_holder_nav, firstTimeLandingFragment);
         } else {
             toolbar.setTitle("Home");
-            bundle.putString("cityId", String.valueOf(user.getSelectedCity()));
+            bundle.putString("cityId", String.valueOf(user.getSelectedCityId()));
             HomeFragment homeFragment = new HomeFragment();
             homeFragment.setArguments(bundle);
             presentFragment(R.id.fragment_holder_nav, homeFragment);
@@ -121,7 +110,13 @@ public class NavigationActivity extends BaseActivity implements FirstTimeLanding
                     return true;
                 case R.id.profile:
                     toolbar.setTitle("Profile");
-                    presentFragment(R.id.fragment_holder_nav, new ProfileFragment());
+                    Bundle bundle = new Bundle();
+                    Gson gson = new Gson();
+                    String serializedUser = gson.toJson(user);
+                    bundle.putString("user",serializedUser);
+                    ProfileFragment profileFragment = new ProfileFragment();
+                    profileFragment.setArguments(bundle);
+                    presentFragment(R.id.fragment_holder_nav, profileFragment);
                     return true;
             }
             return false;
@@ -129,8 +124,10 @@ public class NavigationActivity extends BaseActivity implements FirstTimeLanding
     };
 
     @Override
-    public void selectedCity(int cityId) {
-        databaseReference.child("users").child(firebaseUser.getUid()).child("selectedCity").setValue(cityId);
+    public void selectedCity(int cityId, String cityName) {
+        databaseReference = database.getReference("users").child(firebaseUser.getUid());
+        databaseReference.child("selectedCityId").setValue(cityId);
+        databaseReference.child("selectedCityName").setValue(cityName);
         Bundle bundle = new Bundle();
         toolbar.setTitle("Home");
         bundle.putInt("cityId", cityId);
@@ -149,38 +146,19 @@ public class NavigationActivity extends BaseActivity implements FirstTimeLanding
     @Subscribe(threadMode = ThreadMode.MAIN)
     void selectedFavouriteRestaurant(FavouriteRestaurant favouriteRestaurant) {
         if (favouriteRestaurant != null) {
-            getCurrentUser();
-            if (user.getFavouriteRestaurants() == null || user.getFavouriteRestaurants().isEmpty()) {
-                if (favouriteRestaurant.isChecked()) {
-                    databaseReference.child("favouriteRestaurants")
-                            .setValue(favouriteRestaurant.getId() + ",");
-                }
-            } else {
-                String[] restaurantsArray = user.getFavouriteRestaurants().split(",");
-                List<String> result = new ArrayList<>(Arrays.asList(restaurantsArray));
-                if (favouriteRestaurant.isChecked()) {
-                    if (!result.contains(favouriteRestaurant.getId())) {
-                        result.add(favouriteRestaurant.getId() + ",");
-                    }
-                } else {
-                    if (result.contains(favouriteRestaurant.getId())) {
-                        for (Iterator<String> it = result.iterator(); it.hasNext(); ) {
-                            if (it.next().equals(favouriteRestaurant.getId()))
-                                it.remove();
-                        }
-                    }
-                }
-                StringBuilder stringBuilder = new StringBuilder();
-                for (String restId : result) {
-                    stringBuilder.append(restId);
-                    stringBuilder.append(",");
-                }
-                String newFavRestaurants = stringBuilder.toString();
-                Log.e("new restaurants array", newFavRestaurants);
+            if (favouriteRestaurant.isChecked()) {
                 databaseReference.child("users")
                         .child(firebaseUser.getUid())
                         .child("favouriteRestaurants")
-                        .setValue(newFavRestaurants);
+                        .child(favouriteRestaurant.getId())
+                        .setValue(favouriteRestaurant.getId());
+
+            } else {
+                databaseReference.child("users")
+                        .child(firebaseUser.getUid())
+                        .child("favouriteRestaurants")
+                        .child(favouriteRestaurant.getId())
+                        .removeValue();
             }
         }
     }
