@@ -26,7 +26,7 @@ public class RestaurantItemVH extends RecyclerView.ViewHolder {
     @BindView(R.id.restaurant_imageview)
     ImageView restaurantImage;
 
-    @BindView(R.id.restaurant_name)
+    @BindView(R.id.restaurant_name_profile)
     TextView restaurantName;
 
     @BindView(R.id.restaurant_cuisines)

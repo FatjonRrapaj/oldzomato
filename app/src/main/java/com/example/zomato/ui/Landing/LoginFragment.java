@@ -1,4 +1,4 @@
-package com.example.zomato.ui.Landing;
+package com.example.zomato.ui.landing;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -14,8 +14,6 @@ import androidx.fragment.app.Fragment;
 
 import com.example.zomato.R;
 import com.example.zomato.R2;
-
-import org.greenrobot.eventbus.EventBus;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

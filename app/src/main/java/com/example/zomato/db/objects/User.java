@@ -1,9 +1,12 @@
 package com.example.zomato.db.objects;
 
 public class User {
-    public String firstName;
-    public String lastName;
-    public String email;
+
+    private String firstName;
+    private String lastName;
+    private String email;
+    private Long selectedCity;
+    private String favouriteRestaurants;
 
 
     public User() {
@@ -37,6 +40,22 @@ public class User {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public Long getSelectedCity() {
+        return selectedCity;
+    }
+
+    public void setSelectedCity(Long selectedCity) {
+        this.selectedCity = selectedCity;
+    }
+
+    public String getFavouriteRestaurants() {
+        return favouriteRestaurants;
+    }
+
+    public void setFavouriteRestaurants(String favouriteRestaurants) {
+        this.favouriteRestaurants = favouriteRestaurants;
     }
 }
 

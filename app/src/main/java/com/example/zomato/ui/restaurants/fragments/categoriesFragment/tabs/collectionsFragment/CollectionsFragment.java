@@ -1,4 +1,4 @@
-package com.example.zomato.ui.restaurants.fragments.collectionsFragment;
+package com.example.zomato.ui.restaurants.fragments.categoriesFragment.tabs.collectionsFragment;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -19,7 +19,7 @@ import com.example.zomato.client.responses.collections.CollectionsItem;
 import com.example.zomato.client.responses.collections.CollectionsResponse;
 import com.example.zomato.client.responses.restaurants.RestaurantsResponse;
 import com.example.zomato.ui.base.BaseFragment;
-import com.example.zomato.ui.restaurants.fragments.collectionsFragment.recyclerView.CollectionsAdapter;
+import com.example.zomato.ui.restaurants.fragments.categoriesFragment.tabs.collectionsFragment.recyclerView.CollectionsAdapter;
 import com.example.zomato.ui.restaurants.fragments.homeFragment.recyclerview.RestaurantsAdapter;
 import com.example.zomato.utils.RecyclerViewMargin;
 import com.example.zomato.utils.SizeCalculator;

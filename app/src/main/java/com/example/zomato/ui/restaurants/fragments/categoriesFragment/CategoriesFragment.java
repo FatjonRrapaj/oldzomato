@@ -11,8 +11,8 @@ import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 
 import com.example.zomato.R;
-import com.example.zomato.ui.restaurants.fragments.categoriesFragment.tabs.establishmentsFragment.EstablishmentsFragment;
-import com.example.zomato.ui.restaurants.fragments.categoriesFragment.tabs.cuisinesFragment.CuisinesFragment;
+import com.example.zomato.ui.restaurants.fragments.categoriesFragment.tabs.collectionsFragment.CollectionsFragment;
+import com.example.zomato.ui.restaurants.fragments.categoriesFragment.tabs.favouritesFragment.FavouritesFragment;
 import com.example.zomato.utils.TabAdapter;
 import com.google.android.material.tabs.TabLayout;
 
@@ -51,14 +51,15 @@ public class CategoriesFragment extends Fragment {
         Bundle bundle = new Bundle();
         bundle.putInt("cityId", cityId);
 
-        CuisinesFragment cuisinesFragment = new CuisinesFragment();
-        cuisinesFragment.setArguments(bundle);
-        EstablishmentsFragment establishmentsFragment = new EstablishmentsFragment();
-        establishmentsFragment.setArguments(bundle);
+        CollectionsFragment collectionsFragment = new CollectionsFragment();
+        collectionsFragment.setArguments(bundle);
+
+        FavouritesFragment favouritesFragment = new FavouritesFragment();
+        favouritesFragment.setArguments(bundle);
 
         adapter = new TabAdapter(getFragmentManager());
-        adapter.addFragment(cuisinesFragment,"Cuisines");
-        adapter.addFragment(establishmentsFragment,"Categories");
+        adapter.addFragment(collectionsFragment,"Collections");
+        adapter.addFragment(favouritesFragment,"Favourites");
 
         viewPager.setAdapter(adapter);
         tabLayout.setupWithViewPager(viewPager);

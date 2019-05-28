@@ -1,11 +1,9 @@
 package com.example.zomato.ui.restaurants.fragments.homeFragment;
 
-import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -22,7 +20,6 @@ import com.example.zomato.client.api.ApiUtils;
 import com.example.zomato.client.responses.restaurants.RestaurantsResponse;
 import com.example.zomato.ui.base.BaseFragment;
 import com.example.zomato.ui.restaurants.fragments.homeFragment.recyclerview.RestaurantsAdapter;
-import com.example.zomato.utils.CustomScrollListener;
 import com.example.zomato.utils.RecyclerViewMargin;
 import com.example.zomato.utils.SizeCalculator;
 
@@ -34,7 +31,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class HomeFragment extends BaseFragment implements CustomScrollListener.OnScrollChangedListener {
+public class HomeFragment extends BaseFragment {
 
     @BindView(R.id.home_seek_bar_container)
     ConstraintLayout seekBarContainer;
@@ -49,10 +46,9 @@ public class HomeFragment extends BaseFragment implements CustomScrollListener.O
     RecyclerView recyclerView;
 
     private Unbinder unbinder;
-    private int cityId = 61; //London default.
+    private String cityId = "61"; //London default.
     private Api api;
 
-    private int seekBarContainerHeight;
     private RecyclerView.Adapter adapter;
 
     float scale;
@@ -65,7 +61,7 @@ public class HomeFragment extends BaseFragment implements CustomScrollListener.O
         View view = inflater.inflate(R.layout.home_fragment, container, false);
         unbinder = ButterKnife.bind(this, view);
         if (getArguments() != null) {
-            cityId = getArguments().getInt("cityId");
+            cityId = getArguments().getString("cityId");
         }
         scale = HomeFragment.this.getContext().getResources().getDisplayMetrics().density;
         seekBarContainerExpanded = (int) (70 * scale + 0.5f);
@@ -96,10 +92,6 @@ public class HomeFragment extends BaseFragment implements CustomScrollListener.O
         });
     }
 
-    private void hanldeRecyclerViewScrollListener() {
-        recyclerView.addOnScrollListener(new CustomScrollListener(this));
-    }
-
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -112,29 +104,9 @@ public class HomeFragment extends BaseFragment implements CustomScrollListener.O
         recyclerView.setHasFixedSize(true);
         RecyclerViewMargin decoration = new RecyclerViewMargin(4, numberOfColumns);
         recyclerView.addItemDecoration(decoration);
-        hanldeRecyclerViewScrollListener();
-
         seekBarProgress.setText(String.valueOf(seekBar.getProgress()));
         handleSeekbarChange();
-
-        getSeekbarContainerHeight();
-
         fetchRestaurants(seekBar.getProgress());
-    }
-
-    private void getSeekbarContainerHeight() {
-        ViewTreeObserver vto = seekBarContainer.getViewTreeObserver();
-        vto.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-            @Override
-            public void onGlobalLayout() {
-                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
-                    seekBarContainer.getViewTreeObserver().removeGlobalOnLayoutListener(this);
-                } else {
-                    seekBarContainer.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-                }
-                seekBarContainerHeight = seekBarContainer.getMeasuredHeight();
-            }
-        });
     }
 
     private void fetchRestaurants(int count) {
@@ -174,27 +146,4 @@ public class HomeFragment extends BaseFragment implements CustomScrollListener.O
         unbinder.unbind();
     }
 
-
-    @Override
-    public void scrolledDown() {
-//        if (seekBarContainerHeight == seekBarContainerExpanded) {
-//            seekBarContainer.setLayoutParams(
-//                    new ConstraintLayout.LayoutParams(ConstraintLayout.LayoutParams.MATCH_CONSTRAINT, seekBarContainerFolded)
-//            );
-//        }
-    }
-
-    @Override
-    public void scrolledUp() {
-//        if (seekBarContainerHeight <= seekBarContainerFolded) {
-//            seekBarContainer.setLayoutParams(
-//                    new ConstraintLayout.LayoutParams(ConstraintLayout.LayoutParams.MATCH_CONSTRAINT, seekBarContainerExpanded)
-//            );
-//        }
-
-    }
-
-    @Override
-    public void stoppedScrolling() {
-    }
 }

@@ -129,6 +129,7 @@
         android:layout_marginEnd="8dp"
         android:text="Already have an account?"
         app:layout_constraintEnd_toEndOf="@+id/signup_button"
+        app:layout_constraintHorizontal_bias="0.227"
         app:layout_constraintStart_toStartOf="@+id/radiogroup_gender"
         app:layout_constraintTop_toBottomOf="@+id/signup_button" />
 

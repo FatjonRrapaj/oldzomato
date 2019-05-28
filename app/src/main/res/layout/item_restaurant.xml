@@ -13,13 +13,13 @@
             android:id="@+id/restaurant_imageview"
             android:layout_width="200dp"
             android:layout_height="150dp"
-            app:layout_constraintBottom_toTopOf="@+id/restaurant_name"
+            app:layout_constraintBottom_toTopOf="@+id/restaurant_name_profile"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/restaurant_name"
+            android:id="@+id/restaurant_name_profile"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="4dp"
@@ -47,7 +47,7 @@
             app:layout_constraintBottom_toTopOf="@+id/restaurant_custom_rating"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="@+id/restaurant_name" />
+            app:layout_constraintStart_toStartOf="@+id/restaurant_name_profile" />
 
         <TextView
             android:id="@+id/restaurant_custom_rating"

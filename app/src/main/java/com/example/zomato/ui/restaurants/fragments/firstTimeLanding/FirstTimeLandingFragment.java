@@ -22,7 +22,6 @@ import com.example.zomato.client.responses.cities.CitiesResponse;
 import com.example.zomato.client.responses.cities.LocationSuggestionsItem;
 import com.example.zomato.staticData.states.State;
 import com.example.zomato.staticData.states.States;
-import com.example.zomato.ui.Landing.LoginFragment;
 import com.example.zomato.ui.base.BaseFragment;
 import com.example.zomato.ui.restaurants.fragments.firstTimeLanding.recyclerViews.cities.CitiesAdapter;
 import com.example.zomato.ui.restaurants.fragments.firstTimeLanding.recyclerViews.states.StatesAdapter;

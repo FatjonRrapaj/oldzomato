@@ -1,4 +1,4 @@
-package com.example.zomato.ui.Landing;
+package com.example.zomato.ui.landing;
 
 import androidx.annotation.NonNull;
 
@@ -7,34 +7,40 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.example.zomato.R;
+import com.example.zomato.db.objects.User;
 import com.example.zomato.ui.base.BaseActivity;
 import com.example.zomato.ui.restaurants.NavigationActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.gson.Gson;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class MainActivity extends BaseActivity implements LoginFragment.OnItemSelectedListener, SignUpFragment.OnItemSelectedListener {
 
-    private FirebaseAuth mAuth;
+    private FirebaseAuth firebaseAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        // Initialize Firebase Auth
-        mAuth = FirebaseAuth.getInstance();
+        firebaseAuth = FirebaseAuth.getInstance();
     }
 
     @Override
     public void onStart() {
         super.onStart();
         // Check if user is signed in (non-null) and update UI accordingly.
-        FirebaseUser currentUser = mAuth.getCurrentUser();
+        FirebaseUser currentUser = firebaseAuth.getCurrentUser();
         if (currentUser != null) {
-//            FirebaseAuth.getInstance().signOut();
-            presentActivity(new NavigationActivity(),"username", currentUser.getDisplayName());
+            Gson gson = new Gson();
+            String serializedUser = gson.toJson(currentUser);
+            presentActivity(new NavigationActivity(), "firebaseUser", serializedUser);
         } else {
             presentFragment(R.id.fragment_holder_main, new LoginFragment());
         }
@@ -43,22 +49,20 @@ public class MainActivity extends BaseActivity implements LoginFragment.OnItemSe
     @Override
     public void loginClicked(String email, String password) {
         //TODO: show loader here
-        mAuth.signInWithEmailAndPassword(email, password)
+        firebaseAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            // Sign in success, update UI with the signed-in user's information
-                            Log.d("logged in", "signInWithEmail:success");
-                            FirebaseUser user = mAuth.getCurrentUser();
+//                            FirebaseUser user = firebaseAuth.getCurrentUser();
+//                            Gson gson = new Gson();
+//                            String serializedUser = gson.toJson(user);
                             presentActivity(new NavigationActivity());
                         } else {
-                            // If sign in fails, display a message to the user.
-                            Toast.makeText(getApplication(),"Failed to log in",Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplication(), "Failed to log in", Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
-
     }
 
     @Override
@@ -70,24 +74,32 @@ public class MainActivity extends BaseActivity implements LoginFragment.OnItemSe
     @Override
     public void signUpClicked(String email, String password, String firstName, String lastName) {
         //TODO: show loader here.
-        mAuth.createUserWithEmailAndPassword(email, password)
+        firebaseAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            // Sign in success, update UI with the signed-in user's information
-                            FirebaseUser user = mAuth.getCurrentUser();
-                            presentActivity(new NavigationActivity());
 
+                            Gson gson = new Gson();
+                            User newUser = new User(firstName,lastName,email);
+                            String serializedNewUser = gson.toJson(newUser);
+                            presentActivity(new NavigationActivity(), "newUser",serializedNewUser);
                         } else {
-                            // If sign in fails, display a message to the user.
+                            Toast.makeText(getApplication(), "Failed to create user", Toast.LENGTH_SHORT).show();
+                            task.addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    Log.e("failReasong",e.getMessage());
+                                    e.printStackTrace();
+                                }
+                            });
                         }
                     }
                 });
     }
 
     @Override
-    public void loginClicked() {
+    public void reLoginClicked() {
         presentFragment(R.id.fragment_holder_main, new LoginFragment());
     }
 }

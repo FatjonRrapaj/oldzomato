@@ -1,4 +1,4 @@
-package com.example.zomato.ui.restaurants.fragments.collectionsFragment.recyclerView;
+package com.example.zomato.ui.restaurants.fragments.categoriesFragment.tabs.collectionsFragment.recyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -6,8 +6,6 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-
-import com.example.zomato.ui.restaurants.fragments.collectionsFragment.recyclerView.CollectionsItemVH;
 
 import com.example.zomato.R;
 import com.example.zomato.client.responses.collections.CollectionsItem;

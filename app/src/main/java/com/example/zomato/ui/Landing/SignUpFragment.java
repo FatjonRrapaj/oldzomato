@@ -1,4 +1,4 @@
-package com.example.zomato.ui.Landing;
+package com.example.zomato.ui.landing;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -71,7 +71,7 @@ public class SignUpFragment extends Fragment {
 
     @OnClick(R.id.login_already)
     void login() {
-        listener.loginClicked();
+        listener.reLoginClicked();
     }
 
     private Unbinder unbinder;
@@ -79,7 +79,7 @@ public class SignUpFragment extends Fragment {
     public interface OnItemSelectedListener {
         public void signUpClicked(String email, String password, String firstName, String lastName);
 
-        public void loginClicked();
+        public void reLoginClicked();
     }
 
     private OnItemSelectedListener listener;

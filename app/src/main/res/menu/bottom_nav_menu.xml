@@ -9,12 +9,6 @@
         app:showAsAction="ifRoom"/>
 
     <item
-        android:id="@+id/collections"
-        android:icon="@drawable/united_kingdom"
-        android:title="Collections"
-        app:showAsAction="ifRoom"/>
-
-    <item
         android:id="@+id/categories"
         android:icon="@drawable/portugal"
         android:title="Categories"
