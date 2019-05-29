@@ -95,7 +95,7 @@ public class FirstTimeLandingFragment extends BaseFragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        welcomeText.setText("Welcome" + userName + ", in which city are you staying?");
+        welcomeText.setText("Welcome " + userName + ", in which city are you staying?");
 
         statesRecyclerView.setHasFixedSize(true);
         RecyclerView.LayoutManager statesLayoutManager = new LinearLayoutManager(FirstTimeLandingFragment.this.getContext(), LinearLayoutManager.HORIZONTAL, false);

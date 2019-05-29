@@ -2,7 +2,9 @@ package com.example.zomato.ui.landing;
 
 import androidx.annotation.NonNull;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Window;
 import android.widget.Toast;
@@ -59,6 +61,10 @@ public class MainActivity extends BaseActivity implements LoginFragment.OnItemSe
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         dismissProgressDialog();
                         if (task.isSuccessful()) {
+                            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplication());
+                            SharedPreferences.Editor editor = preferences.edit();
+                            editor.putString("password",password);
+                            editor.apply();
                             presentActivity(new NavigationActivity());
                         } else {
                             Toast.makeText(getApplication(), "Failed to log in", Toast.LENGTH_SHORT).show();
@@ -82,11 +88,13 @@ public class MainActivity extends BaseActivity implements LoginFragment.OnItemSe
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         dismissProgressDialog();
                         if (task.isSuccessful()) {
-                            Gson gson = new Gson();
+                            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplication());
+                            SharedPreferences.Editor editor = preferences.edit();
+                            editor.putString("password",password);
+                            editor.apply();
                             User newUser = new User(firstName,lastName,email);
-                            String serializedNewUser = gson.toJson(newUser);
                             databaseReference.child("users").child(firebaseAuth.getCurrentUser().getUid()).setValue(newUser);
-                            presentActivity(new NavigationActivity(), "newUser",serializedNewUser);
+                            presentActivity(new NavigationActivity());
                         } else {
                             Toast.makeText(getApplication(), "Failed to create user", Toast.LENGTH_SHORT).show();
                             task.addOnFailureListener(new OnFailureListener() {

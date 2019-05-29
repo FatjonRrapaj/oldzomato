@@ -1,6 +1,8 @@
 package com.example.zomato.ui.restaurants.fragments.profileFragment;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +20,8 @@ import com.example.zomato.ui.base.BaseFragment;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -55,50 +59,65 @@ public class ProfileFragment extends BaseFragment {
     private FirebaseDatabase database;
     private DatabaseReference databaseReference;
 
+    private String password;
+
     private User user;
 
     @OnClick(R.id.update_email_profile)
     void updateEmailClicked() {
-        if (!emailEditText.getText().toString().equals(user.getEmail().toString())) {
-            showProgressBar("Updating email...");
-            firebaseUser.updateEmail(emailEditText.getText().toString()).addOnCompleteListener(new OnCompleteListener<Void>() {
-                @Override
-                public void onComplete(@NonNull Task<Void> task) {
-                    dismissProgressDialog();
-                    if (task.isSuccessful()) {
-                        Toast.makeText(ProfileFragment.this.getContext(), "Email updated", Toast.LENGTH_SHORT).show();
-                    } else {
-                        Toast.makeText(ProfileFragment.this.getContext(), "Failed to update the email", Toast.LENGTH_SHORT).show();
-                    }
-                }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    System.out.println(e.getMessage());
-                }
-            });
+        if (emailEditText.getText().equals(firebaseUser.getEmail())) {
+            return;
         }
+        showProgressBar("Updating email...");
+        AuthCredential credential = EmailAuthProvider
+                .getCredential(firebaseUser.getEmail(), password);
+        firebaseUser.reauthenticate(credential)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        //Now change your email address \\
+                        //----------------Code for Changing Email Address----------\\
+                        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                        user.updateEmail(emailEditText.getText().toString())
+                                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task) {
+                                        dismissProgressDialog();
+                                        if (task.isSuccessful()) {
+                                            Toast.makeText(ProfileFragment.this.getContext(), "Email updated", Toast.LENGTH_SHORT).show();
+                                        } else {
+                                            Toast.makeText(ProfileFragment.this.getContext(), "Failed to update the email", Toast.LENGTH_SHORT).show();
+                                        }
+                                    }
+                                });
+                    }
+                });
     }
 
     @OnClick(R.id.update_password_profile)
     void updatePasswordClicked() {
+        showProgressBar("Updating password");
         if (passwordEditText.getText().toString().length() >= 6) {
-            showProgressBar("Updating password...");
-            firebaseUser.updateEmail(passwordEditText.getText().toString())
+            AuthCredential credential = EmailAuthProvider
+                    .getCredential(firebaseUser.getEmail(), password);
+
+            firebaseUser.reauthenticate(credential)
                     .addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
+                            dismissProgressDialog();
                             if (task.isSuccessful()) {
-                                Toast.makeText(ProfileFragment.this.getContext(), "Password updated", Toast.LENGTH_SHORT).show();
-                            } else {
-                                Toast.makeText(ProfileFragment.this.getContext(), "Failed to update the password", Toast.LENGTH_SHORT).show();
+                                firebaseUser.updatePassword(passwordEditText.getText().toString()).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task) {
+                                        if (task.isSuccessful()) {
+                                            Toast.makeText(ProfileFragment.this.getContext(), "Password updated", Toast.LENGTH_SHORT).show();
+                                        } else {
+                                            Toast.makeText(ProfileFragment.this.getContext(), "Failed to update the password", Toast.LENGTH_SHORT).show();
+                                        }
+                                    }
+                                });
                             }
-                        }
-                    })
-                    .addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            System.out.println(e.getMessage());
                         }
                     });
         }
@@ -122,6 +141,9 @@ public class ProfileFragment extends BaseFragment {
         firebaseUser = getFirebaseUser();
         firebaseAuth = FirebaseAuth.getInstance();
         database = FirebaseDatabase.getInstance();
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        password = preferences.getString("password", "");
+        System.out.println("");
     }
 
     @Nullable
@@ -140,7 +162,7 @@ public class ProfileFragment extends BaseFragment {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 user = dataSnapshot.getValue(User.class);
-                if(isSafe()){
+                if (isSafe()) {
                     nameTextView.setText(user.getFirstName() + " " + user.getLastName());
                     emailEditText.setText(user.getEmail());
                     passwordEditText.setHint("Change password...");

@@ -34,12 +34,10 @@ public class CategoriesFragment extends Fragment {
 
     private TabAdapter adapter;
 
-//    private String[] favRestaurantsArray; 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-//            favRestaurantsArray = getArguments().getStringArray("favRestaurants");
         }
     }
 
@@ -55,17 +53,17 @@ public class CategoriesFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        int cityId = 61;
+        String cityId = "61";
         if (getArguments() != null) {
-            cityId = getArguments().getInt("cityId");
+            cityId = (getArguments().getString("cityId"));
         }
         Bundle bundle = new Bundle();
-        bundle.putInt("cityId", cityId);
+        bundle.putString("cityId", cityId);
 
         CollectionsFragment collectionsFragment = new CollectionsFragment();
         collectionsFragment.setArguments(bundle);
 
-        FavouritesFragment favouritesFragment = new FavouritesFragment();
+        //FavouritesFragment favouritesFragment = new FavouritesFragment();
 
         adapter = new TabAdapter(getFragmentManager());
         adapter.addFragment(collectionsFragment,"Collections");

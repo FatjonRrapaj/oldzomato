@@ -1,6 +1,7 @@
 package com.example.zomato.ui.restaurants.fragments.categoriesFragment.tabs.collectionsFragment;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -56,7 +57,12 @@ public class CollectionsFragment extends BaseFragment {
         super.onCreate(savedInstanceState);
 
         if (getArguments() != null) {
-            cityId = String.valueOf(getArguments().getInt("cityId"));
+            if (getArguments().getString("cityId") != null) {
+                cityId = getArguments().getString("cityId");
+            } else {
+                Log.e("city id is","NULL");
+            }
+
         }
 
         api = ApiUtils.getApiService();
@@ -113,7 +119,7 @@ public class CollectionsFragment extends BaseFragment {
             public void onResponse(Call<CollectionsResponse> call, Response<CollectionsResponse> response) {
                 if (isSafe()) {
                     dismissProgressDialog();
-                    if (response.body().getCollections() != null && !response.body().getCollections().isEmpty()) {
+                    if (response.body() != null || response.body().getCollections() != null && !response.body().getCollections().isEmpty()) {
                         ((CollectionsAdapter) collectionsAdapter).setData(response.body().getCollections());
                         getRestaurantPerCollection(String.valueOf(response.body().getCollections().get(0).getCollection().getCollectionId()));
                     } else {
@@ -156,6 +162,12 @@ public class CollectionsFragment extends BaseFragment {
                 }
             }
         });
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        unbinder.unbind();
     }
 
     @Override
