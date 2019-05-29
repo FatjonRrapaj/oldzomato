@@ -65,6 +65,12 @@ public class BaseActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        dismissProgressDialog();
+    }
+
+    @Override
     public void onResume() {
         dismissProgressDialog();
         super.onResume();
